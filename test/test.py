@@ -1,7 +1,10 @@
 import os
 import sys
 import unittest
-import subprocess
+try:
+  import subprocess
+except ImportError:
+  import subprocess_ as subprocess
 import time
 import urllib
 
@@ -169,7 +172,7 @@ class JSONRPCFunctionalTests(unittest.TestCase):
 
 proc = None
 
-class ServiceProxyText(unittest.TestCase):      
+class ServiceProxyTest(unittest.TestCase):      
   def setUp(self):
     global proc
     if proc is None:
@@ -327,8 +330,9 @@ class JSONRPCTest(unittest.TestCase):
       if not i % 2:
         self.assertEquals(D[u'result'], req[i][u'params'][0])
         self.assertEquals(D[u'id'], req[i][u'id'])
+        self.assert_(u'error' not in D)
       else:
-        self.assertEquals(D[u'result'], None)
+        self.assert_(u'result' not in D)
         self.assert_(u'error' in D)
         self.assertEquals(D[u'error'][u'code'], 500)
   
